@@ -3,9 +3,13 @@
 import {
   IconCalendarEvent,
   IconChecklist,
+  IconPencil,
   IconRefresh,
+  IconTrash,
   IconUsers,
 } from "@tabler/icons-react";
+import Link from "next/link";
+import { useState } from "react";
 import KanbanBoard from "@/components/modules/task/KanbanBoard";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -22,6 +26,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useGetProjectById, useGetProjectInvitations } from "@/hooks";
 import type { InvitationStatus } from "@/types";
 import getInitials from "@/utils/getInitials";
+import DeleteProjectDialog from "./DeleteProjectDialog";
 import ProjectMembers from "./ProjectMembers";
 import ProjectStatusBadge from "./ProjectStatusBadge";
 
@@ -104,6 +109,7 @@ function ProjectInvitations({ projectId }: { projectId: string }) {
 export default function ProjectDetails({ projectId }: { projectId: string }) {
   const { data, isLoading, isError, refetch } = useGetProjectById(projectId);
   const project = data?.data;
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   if (isLoading) {
     return (
@@ -150,7 +156,25 @@ export default function ProjectDetails({ projectId }: { projectId: string }) {
               </p>
             )}
           </div>
-          <ProjectStatusBadge status={project.status} />
+          <div className="flex shrink-0 items-center gap-2">
+            <ProjectStatusBadge status={project.status} />
+            <Link href={`/project-manager/projects/${project.id}/edit`}>
+              <Button type="button" variant="outline" size="sm">
+                <IconPencil aria-hidden="true" />
+                Edit
+              </Button>
+            </Link>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="text-destructive hover:text-destructive"
+              onClick={() => setDeleteOpen(true)}
+            >
+              <IconTrash aria-hidden="true" />
+              Delete
+            </Button>
+          </div>
         </div>
 
         <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 border-t pt-4 text-sm text-muted-foreground">
@@ -247,6 +271,13 @@ export default function ProjectDetails({ projectId }: { projectId: string }) {
           <KanbanBoard projectId={projectId} />
         </TabsContent>
       </Tabs>
+
+      <DeleteProjectDialog
+        projectId={project.id}
+        projectName={project.name}
+        open={deleteOpen}
+        onOpenChange={setDeleteOpen}
+      />
     </section>
   );
 }

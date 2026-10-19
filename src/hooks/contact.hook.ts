@@ -21,6 +21,24 @@ export const useGetContactMessages = (query: Query = {}) => {
   });
 };
 
+const CONTACT_UNREAD_POLL_INTERVAL_MS = 60_000;
+
+/**
+ * Unread (NEW) contact-message count for the admin sidebar badge — mirrors the
+ * notification unread counter. Reuses the paginated inbox endpoint with
+ * `limit=1` and reads `meta.dataCount`, so no dedicated endpoint is needed.
+ * `useUpdateContactMessageStatus` invalidates the same `["contact"]` prefix.
+ */
+export const useGetUnreadContactCount = (enabled = true) => {
+  return useQuery({
+    queryKey: ["contact", { status: "NEW", page: 1, limit: 1 }],
+    queryFn: () => getContactMessages({ status: "NEW", page: 1, limit: 1 }),
+    enabled,
+    refetchInterval: enabled ? CONTACT_UNREAD_POLL_INTERVAL_MS : false,
+    select: (response) => response.meta?.dataCount ?? 0,
+  });
+};
+
 export const useUpdateContactMessageStatus = () => {
   const queryClient = useQueryClient();
   return useMutation({

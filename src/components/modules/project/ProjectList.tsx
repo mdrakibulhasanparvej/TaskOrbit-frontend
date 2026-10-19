@@ -22,7 +22,13 @@ const PAGE_LIMIT = 9;
 
 const ALL_STATUSES = "ALL";
 
-export default function ProjectList() {
+export default function ProjectList({
+  canCreate = true,
+  description = "Create and manage the projects you own.",
+}: {
+  canCreate?: boolean;
+  description?: string;
+}) {
   const [page, setPage] = useState(1);
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
@@ -58,16 +64,16 @@ export default function ProjectList() {
           <h1 className="font-heading text-2xl font-semibold sm:text-3xl">
             Projects
           </h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Create and manage the projects you own.
-          </p>
+          <p className="mt-2 text-sm text-muted-foreground">{description}</p>
         </div>
-        <Link href="/project-manager/create-project">
-          <Button>
-            <IconPlus aria-hidden="true" />
-            Create project
-          </Button>
-        </Link>
+        {canCreate && (
+          <Link href="/project-manager/create-project">
+            <Button>
+              <IconPlus aria-hidden="true" />
+              Create project
+            </Button>
+          </Link>
+        )}
       </header>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -163,9 +169,11 @@ export default function ProjectList() {
           <p className="mt-1 text-sm text-muted-foreground">
             {search || status
               ? "Try adjusting your search or status filter."
-              : "Create your first project to get started."}
+              : canCreate
+                ? "Create your first project to get started."
+                : "You are not a member of any project yet."}
           </p>
-          {!search && !status && (
+          {canCreate && !search && !status && (
             <Link href="/project-manager/create-project">
               <Button type="button" className="mt-4">
                 <IconPlus aria-hidden="true" />

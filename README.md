@@ -4,11 +4,12 @@ TaskOrbit is a modern, role-based project management platform designed for teams
 
 ## What the system does
 
-The application provides account access and project management workflows for three roles:
+The application provides account access and project management workflows for four roles:
 
 - **Admin** manages platform-wide oversight, platform settings, users, projects, payments, and system reports.
-- **Project Manager** creates and manages projects, invites team members, plans project tasks, tracks progress on Kanban boards, and manages subscriptions.
+- **Project Manager** creates and manages projects, invites team members, plans project tasks, and tracks progress on Kanban boards.
 - **Team Member** tracks assigned tasks, updates task progress, collaborates via task comments and attachments, and receives real-time notifications.
+- **Client** owns the billing relationship — subscribing to a plan through Stripe checkout, reviewing payment history, and contacting support — with no access to projects or tasks.
 
 Users can register, verify their email, sign in with credentials, or start Google OAuth. Route guards protect dashboard routes and restrict each dashboard to its authorized role.
 
@@ -20,8 +21,9 @@ Users can register, verify their email, sign in with credentials, or start Googl
 | `/forgot-password`, `/reset-password` | Password recovery with OTP |
 | `/oauth-progress` | Verify the session after Google OAuth and route to the user's dashboard |
 | `/admin/*` | Platform administration, users, projects, payments, settings |
-| `/project-manager/*` | Project management, task planning, team invitations, subscriptions |
+| `/project-manager/*` | Project management, task planning, team invitations |
 | `/team-member/*` | My tasks, task details, status updates, notifications |
+| `/client/*` | Subscription, payment history, contact support, notifications |
 | `/pricing` | Public subscription plans and Stripe checkout |
 | `/contact` | Public contact inquiry form |
 | `/payment/success`, `/payment/cancel` | Stripe checkout return pages |
@@ -92,4 +94,4 @@ Credential sign-in and registration use the `/auth` API functions; email verific
 
 ### Payments
 
-Project managers can subscribe to PRO or BUSINESS plans via Stripe checkout. The backend creates the Stripe checkout session and returns its URL; the browser redirects to Stripe. Stripe returns the user to the success or cancel route where payment verification is handled.
+Clients subscribe to PRO or BUSINESS plans via Stripe checkout. The backend creates the Stripe checkout session and returns its URL; the browser redirects to Stripe. Stripe returns the user to the public success or cancel route where payment verification is handled. Signed-in clients manage their plan at `/client/subscription` and review charges at `/client/payment-history`; admins keep read-only oversight of every payment at `/admin/payments`.

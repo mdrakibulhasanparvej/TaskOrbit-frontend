@@ -38,6 +38,7 @@ import { Spinner } from "../ui/spinner";
 const ROLE_ITEMS: { label: string; value: TaskOrbitRole }[] = [
   { label: "Project Manager", value: "PROJECT_MANAGER" },
   { label: "Team Member", value: "TEAM_MEMBER" },
+  { label: "Client", value: "CLIENT" },
 ];
 
 export function RegisterForm({
@@ -335,7 +336,7 @@ export function RegisterForm({
               fill
               priority
               sizes="(min-width: 768px) 50vw, 0px"
-              src="/registerBanner.png"
+              src="/registerBanner.jpg"
               alt="Register form image"
               className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.8]"
             />

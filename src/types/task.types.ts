@@ -56,6 +56,11 @@ export interface TaskListItem {
   created_at: string;
   updated_at: string;
   assignee: TaskUserSummary | null;
+  /**
+   * Owning project nest. Present on list responses (GET /tasks) so the
+   * cross-project "my tasks" view can show which project a task belongs to.
+   */
+  project?: TaskProjectSummary;
   _count: TaskCounts;
 }
 
@@ -83,9 +88,12 @@ export interface Board {
   DONE: TaskListItem[];
 }
 
-/** Query params — GET /tasks (`projectId` REQUIRED, plan.md §9). */
+/**
+ * Query params — GET /tasks. `projectId` is optional: when omitted the backend
+ * returns the caller's own assignments across every project they can access.
+ */
 export interface TasksQuery {
-  projectId: string;
+  projectId?: string;
   page?: number;
   limit?: number;
   search?: string;

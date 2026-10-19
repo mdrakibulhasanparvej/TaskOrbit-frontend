@@ -1,4 +1,10 @@
-import { IconBell, IconListCheck, IconUser } from "@tabler/icons-react";
+import {
+  IconBell,
+  IconFolder,
+  IconListCheck,
+  IconMail,
+  IconUser,
+} from "@tabler/icons-react";
 import type { Route } from "@/types";
 
 const prefix = "/team-member";
@@ -11,6 +17,26 @@ export const teamMemberRoutes: Route[] = [
         title: "My Tasks",
         url: `${prefix}/my-tasks`,
         icon: IconListCheck,
+      },
+    ],
+  },
+  {
+    title: "Projects",
+    items: [
+      {
+        title: "Projects",
+        url: `${prefix}/projects`,
+        icon: IconFolder,
+      },
+    ],
+  },
+  {
+    title: "Invitations",
+    items: [
+      {
+        title: "Invitations",
+        url: `${prefix}/invitations`,
+        icon: IconMail,
       },
     ],
   },

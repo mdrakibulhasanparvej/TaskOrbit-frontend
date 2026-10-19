@@ -10,7 +10,13 @@ import KanbanColumn from "./KanbanColumn";
 import TaskDetailsSheet from "./TaskDetailsSheet";
 import TaskForm from "./TaskForm";
 
-export default function KanbanBoard({ projectId }: { projectId: string }) {
+export default function KanbanBoard({
+  projectId,
+  readOnly = false,
+}: {
+  projectId: string;
+  readOnly?: boolean;
+}) {
   const { data, isLoading, isError, refetch } = useGetBoard(projectId);
   const { data: profileData } = useGetProfile();
   // Phase-03 profile is typed with the legacy `Role` union; the runtime
@@ -57,7 +63,7 @@ export default function KanbanBoard({ projectId }: { projectId: string }) {
           Use a task&apos;s detail panel to move it between columns — moves go
           through the status endpoint, never the edit form.
         </p>
-        {role === "PROJECT_MANAGER" && (
+        {!readOnly && role === "PROJECT_MANAGER" && (
           <Button
             type="button"
             size="sm"
@@ -81,11 +87,13 @@ export default function KanbanBoard({ projectId }: { projectId: string }) {
         ))}
       </div>
 
-      <TaskForm
-        projectId={projectId}
-        open={isFormOpen}
-        onOpenChange={setIsFormOpen}
-      />
+      {!readOnly && (
+        <TaskForm
+          projectId={projectId}
+          open={isFormOpen}
+          onOpenChange={setIsFormOpen}
+        />
+      )}
 
       <TaskDetailsSheet
         projectId={projectId}

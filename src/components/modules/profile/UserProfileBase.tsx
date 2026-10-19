@@ -25,6 +25,7 @@ const roleNames: Record<TaskOrbitRole, string> = {
   ADMIN: "Administrator",
   PROJECT_MANAGER: "Project Manager",
   TEAM_MEMBER: "Team Member",
+  CLIENT: "Client",
 };
 
 export default function UserProfileBase({ profile }: { profile: UserProfile }) {

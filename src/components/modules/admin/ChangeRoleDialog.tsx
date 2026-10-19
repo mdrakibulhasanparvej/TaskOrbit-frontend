@@ -28,6 +28,7 @@ const ROLE_OPTIONS: { value: TaskOrbitRole; label: string }[] = [
   { value: "ADMIN", label: "Admin" },
   { value: "PROJECT_MANAGER", label: "Project Manager" },
   { value: "TEAM_MEMBER", label: "Team Member" },
+  { value: "CLIENT", label: "Client" },
 ];
 
 /**

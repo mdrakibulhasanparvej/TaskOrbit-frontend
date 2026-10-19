@@ -47,6 +47,16 @@ export const login = async (payload: LoginPayload) => {
   return adaptLogin(raw);
 };
 
+/** POST /auth/google — exchange a Google ID token for a TaskOrbit session. */
+export const googleLogin = async (idToken: string) => {
+  const raw = await apiClient<TaskOrbitLoginResponse>(`${prefix}/google`, {
+    method: "POST",
+    body: { id_token: idToken },
+  });
+
+  return adaptLogin(raw);
+};
+
 export const register = (payload: RegisterApiPayload) => {
   return apiClient<ApiResponse<undefined>>(`${prefix}/register`, {
     method: "POST",

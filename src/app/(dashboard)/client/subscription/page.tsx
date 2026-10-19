@@ -7,11 +7,11 @@ export const metadata: Metadata = {
 };
 
 /**
- * PM subscription surface (plan.md §10 step 16) — current plan + usage from
- * `GET /payments/subscription` (P4) and the upgrade grid from the public
- * plans endpoint (P3). PM-only by the `(dashboard)/project-manager` layout.
+ * Client subscription surface — current plan from `GET /payments/subscription`
+ * and the upgrade grid from the public plans endpoint. CLIENT-only by the
+ * `(dashboard)/client` layout.
  */
-export default function SubscriptionPage() {
+export default function ClientSubscriptionPage() {
   return (
     <section className="mx-auto flex w-full max-w-4xl flex-col gap-8 px-4 py-6 sm:px-6 lg:px-8">
       <header>
@@ -19,7 +19,7 @@ export default function SubscriptionPage() {
           Subscription
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Your current plan, usage against limits, and every available upgrade.
+          Your current plan and every available upgrade.
         </p>
       </header>
 

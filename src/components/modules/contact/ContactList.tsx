@@ -6,6 +6,13 @@ import { useMemo, useState } from "react";
 import MyPagination from "@/components/shared/Pagination";
 import { Button } from "@/components/ui/button";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -40,6 +47,7 @@ const statusLabel = (value: ContactStatus) =>
 export default function ContactList() {
   const [page, setPage] = useState(1);
   const [status, setStatus] = useState<ContactStatus | undefined>(undefined);
+  const [viewing, setViewing] = useState<ContactMessage | null>(null);
 
   const { mutate: updateStatus, isPending } = useUpdateContactMessageStatus();
 
@@ -51,7 +59,11 @@ export default function ContactList() {
   const messages = data?.data ?? [];
   const totalPages = data?.meta?.totalPages ?? 1;
 
-  const handleStatusChange = (message: ContactMessage, next: ContactStatus) => {
+  const handleStatusChange = (
+    message: ContactMessage,
+    next: ContactStatus,
+    options: { silent?: boolean } = {},
+  ) => {
     if (isPending || next === message.status) return;
 
     updateStatus(
@@ -67,11 +79,13 @@ export default function ContactList() {
             return;
           }
 
-          triggerToast({
-            type: "success",
-            title: "Status updated",
-            description: `Marked as ${statusLabel(next).toLowerCase()}.`,
-          });
+          if (!options.silent) {
+            triggerToast({
+              type: "success",
+              title: "Status updated",
+              description: `Marked as ${statusLabel(next).toLowerCase()}.`,
+            });
+          }
         },
         onError: (error: FetchError) => {
           triggerToast({
@@ -82,6 +96,21 @@ export default function ContactList() {
         },
       },
     );
+  };
+
+  /**
+   * Opening a message reveals its full body. A NEW message is marked READ on
+   * open (silently — the confirmation toast would be noise), which also drops
+   * the sidebar unread badge via the `["contact"]` invalidation.
+   */
+  const openMessage = (message: ContactMessage) => {
+    if (message.status === "NEW") {
+      handleStatusChange(message, "READ", { silent: true });
+      setViewing({ ...message, status: "READ" });
+      return;
+    }
+
+    setViewing(message);
   };
 
   return (
@@ -193,6 +222,14 @@ export default function ContactList() {
                   </TableCell>
                   <TableCell>
                     <div className="flex justify-end gap-1.5">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => openMessage(message)}
+                      >
+                        View
+                      </Button>
                       {message.status === "NEW" && (
                         <Button
                           type="button"
@@ -231,6 +268,34 @@ export default function ContactList() {
           />
         </>
       )}
+
+      <Dialog
+        open={Boolean(viewing)}
+        onOpenChange={(open) => {
+          if (!open) setViewing(null);
+        }}
+      >
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>{viewing?.subject}</DialogTitle>
+            <DialogDescription>
+              From {viewing?.name} ({viewing?.email}) ·{" "}
+              {viewing
+                ? new Date(viewing.created_at).toLocaleString()
+                : undefined}
+            </DialogDescription>
+          </DialogHeader>
+
+          {viewing && (
+            <div className="flex flex-col gap-4">
+              <ContactStatusBadge status={viewing.status} />
+              <p className="whitespace-pre-wrap text-sm text-foreground">
+                {viewing.message}
+              </p>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

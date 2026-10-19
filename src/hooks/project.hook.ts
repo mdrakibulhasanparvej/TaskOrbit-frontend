@@ -119,6 +119,9 @@ export const useGetMyInvitations = () => {
   return useQuery({
     queryKey: ["invitations", "mine"],
     queryFn: getMyInvitations,
+    // Keep the sidebar "Invitations" badge fresh, mirroring the notification
+    // unread counter (no SSE/websocket on the backend).
+    refetchInterval: 60_000,
   });
 };
 

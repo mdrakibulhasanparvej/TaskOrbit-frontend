@@ -21,7 +21,6 @@ export const useGetTasks = (query: TasksQuery) => {
   return useQuery({
     queryKey: ["tasks", query],
     queryFn: () => getTasks(query),
-    enabled: Boolean(query.projectId),
   });
 };
 

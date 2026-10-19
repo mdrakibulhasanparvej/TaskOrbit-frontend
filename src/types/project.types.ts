@@ -74,6 +74,8 @@ export interface Invitation {
   email: string;
   status: InvitationStatus;
   expires_at: string;
+  /** Returned by the backend select (invitationSelect) — used as the sent date. */
+  created_at?: string;
   project: InvitationProjectSummary;
   invited_by: ProjectUserSummary;
   /**

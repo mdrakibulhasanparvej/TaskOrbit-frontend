@@ -92,7 +92,7 @@ export const getMyInvitations = () => {
 
 /** POST /projects/invitations/accept — accept by token (body: {token}). */
 export const acceptInvitation = (token: string) => {
-  return apiClient<ApiResponse<null>>(`${prefix}/invitations/accept`, {
+  return apiClient<ApiResponse<ProjectDetail>>(`${prefix}/invitations/accept`, {
     method: "POST",
     body: { token },
   });

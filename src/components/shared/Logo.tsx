@@ -8,6 +8,7 @@ export default function Logo() {
           src="/brand-logo.png"
           alt="TaskOrbit"
           fill
+          sizes="40px"
           priority
           className="object-contain py-1"
         />

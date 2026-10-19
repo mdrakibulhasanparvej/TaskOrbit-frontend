@@ -22,7 +22,9 @@ export const registerSchema = z
         .regex(/[a-z]/, "password should have one small letter")
         .regex(/[A-Z]/, "password should have one capital letter"),
       confirmPassword: z.string("password is required"),
-      role: z.enum(["PROJECT_MANAGER", "TEAM_MEMBER"]).default("TEAM_MEMBER"),
+      role: z
+        .enum(["PROJECT_MANAGER", "TEAM_MEMBER", "CLIENT"])
+        .default("TEAM_MEMBER"),
       photo: z
         .file()
         .max(5000000, "File cannot exceed 5MB")

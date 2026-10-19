@@ -1,10 +1,13 @@
+"use client";
+
 import {
   IconCalendarEvent,
   IconChecklist,
   IconUsers,
 } from "@tabler/icons-react";
 import Link from "next/link";
-import type { Project } from "@/types";
+import { useGetProfile } from "@/hooks";
+import type { Project, TaskOrbitRole } from "@/types";
 import ProjectStatusBadge from "./ProjectStatusBadge";
 
 function formatDate(value: string | null) {
@@ -17,9 +20,18 @@ function formatDate(value: string | null) {
 }
 
 export default function ProjectCard({ project }: { project: Project }) {
+  const { data } = useGetProfile();
+  // Phase-03 profile is typed with the legacy `Role` union; the runtime
+  // value is always a TaskOrbit role (same assumption as RoleGuard, D5).
+  const role = data?.data?.role as TaskOrbitRole | undefined;
+  const href =
+    role === "TEAM_MEMBER"
+      ? `/team-member/projects/${project.id}/board`
+      : `/project-manager/projects/${project.id}`;
+
   return (
     <Link
-      href={`/project-manager/projects/${project.id}`}
+      href={href}
       className="group flex flex-col rounded-xl border bg-card p-5 outline-none transition-colors hover:border-primary/40 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
     >
       <div className="flex items-start justify-between gap-3">

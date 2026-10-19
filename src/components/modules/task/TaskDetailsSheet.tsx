@@ -89,11 +89,16 @@ export default function TaskDetailsSheet({
 
   const task = data?.data;
   const members = membersData?.data ?? [];
-  // Backend blocks ADMIN from PATCH /tasks/:id/status (plan.md §9, risk #3)
-  // — never offer status moves to ADMIN.
-  const canMove = role !== undefined && role !== "ADMIN";
+  const profile = profileData?.data;
+  // Backend allows TEAM_MEMBER to PATCH /tasks/:id/status only as assignee;
+  // ADMIN is blocked on that route (plan.md §9, risk #3).
+  const isAssignee = task?.assignee_id === profile?.id;
+  const canMove =
+    role !== undefined &&
+    role !== "ADMIN" &&
+    (isAssignee || role === "PROJECT_MANAGER");
   const canAssign = role === "PROJECT_MANAGER";
-  const canEdit = role === "PROJECT_MANAGER";
+  const canEdit = role === "PROJECT_MANAGER" || Boolean(isAssignee);
   const canDelete = role === "PROJECT_MANAGER" || role === "ADMIN";
   const isBusy = isMoving || isAssigning || isDeleting;
 

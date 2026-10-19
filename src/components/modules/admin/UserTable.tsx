@@ -34,6 +34,7 @@ const ROLE_LABELS: Record<TaskOrbitRole, string> = {
   ADMIN: "Admin",
   PROJECT_MANAGER: "Project Manager",
   TEAM_MEMBER: "Team Member",
+  CLIENT: "Client",
 };
 
 const initials = (name: string) =>

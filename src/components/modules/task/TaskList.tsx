@@ -1,6 +1,8 @@
 "use client";
 
+import { IconPencil } from "@tabler/icons-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
@@ -10,7 +12,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import type { TaskListItem } from "@/types";
+import { useGetProfile } from "@/hooks";
+import type { TaskListItem, TaskOrbitRole } from "@/types";
 import getInitials from "@/utils/getInitials";
 import TaskPriorityBadge from "./TaskPriorityBadge";
 import TaskStatusBadge from "./TaskStatusBadge";
@@ -27,12 +30,19 @@ function formatDate(value: string | null) {
 export default function TaskList({
   tasks,
   onSelect,
+  onEdit,
   isLoading = false,
 }: {
   tasks: TaskListItem[];
   onSelect: (task: TaskListItem) => void;
+  onEdit?: (task: TaskListItem) => void;
   isLoading?: boolean;
 }) {
+  const { data } = useGetProfile();
+  // Phase-03 profile is typed with the legacy `Role` union; the runtime
+  // value is always a TaskOrbit role (same assumption as RoleGuard, D5).
+  const role = data?.data?.role as TaskOrbitRole | undefined;
+
   if (isLoading) {
     return <Skeleton className="h-64 rounded-xl" />;
   }
@@ -54,11 +64,13 @@ export default function TaskList({
         <TableHeader>
           <TableRow className="bg-muted/40 hover:bg-muted/40">
             <TableHead className="min-w-56">Title</TableHead>
+            <TableHead className="min-w-40">Project</TableHead>
             <TableHead className="min-w-32">Status</TableHead>
             <TableHead className="min-w-28">Priority</TableHead>
             <TableHead className="min-w-32">Assignee</TableHead>
             <TableHead className="min-w-32">Due date</TableHead>
             <TableHead className="min-w-40">Labels</TableHead>
+            {onEdit && <TableHead className="min-w-20">Actions</TableHead>}
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -72,6 +84,11 @@ export default function TaskList({
                 >
                   {task.title}
                 </button>
+              </TableCell>
+              <TableCell>
+                <span className="truncate text-sm text-muted-foreground">
+                  {task.project?.name ?? "—"}
+                </span>
               </TableCell>
               <TableCell>
                 <TaskStatusBadge status={task.status} />
@@ -118,6 +135,21 @@ export default function TaskList({
                   <span className="text-sm text-muted-foreground">—</span>
                 )}
               </TableCell>
+              {onEdit &&
+                (role === "PROJECT_MANAGER" ||
+                  task.assignee_id === data?.data?.id) && (
+                  <TableCell>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => onEdit(task)}
+                    >
+                      <IconPencil aria-hidden="true" />
+                      Edit
+                    </Button>
+                  </TableCell>
+                )}
             </TableRow>
           ))}
         </TableBody>

@@ -10,6 +10,7 @@ const dashboardPaths: Record<TaskOrbitRole, string> = {
   ADMIN: "/admin",
   PROJECT_MANAGER: "/project-manager",
   TEAM_MEMBER: "/team-member",
+  CLIENT: "/client",
 };
 
 interface Props {

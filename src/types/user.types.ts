@@ -5,7 +5,11 @@ import type { userProfileUpdateSchema } from "@/schemas";
  * TaskOrbit roles (new backend) — the ONLY definition of this union (C3).
  * Used by new code; the legacy `Role` union above stays untouched for Class C code.
  */
-export type TaskOrbitRole = "ADMIN" | "PROJECT_MANAGER" | "TEAM_MEMBER";
+export type TaskOrbitRole =
+  | "ADMIN"
+  | "PROJECT_MANAGER"
+  | "TEAM_MEMBER"
+  | "CLIENT";
 
 export type Providers = "CREDENTIALS" | "GOOGLE";
 export type UserStatus = "ACTIVE" | "BAN";
@@ -74,3 +78,14 @@ export interface ChangePasswordPayload {
   current_password: string;
   new_password: string;
 }
+
+export interface ProjectInvitation {
+  id: string;
+  project_id: string;
+  user_id: string;
+  role: TaskOrbitRole;
+  created_at: string;
+  updated_at: string;
+}
+
+export type Role = TaskOrbitRole;

@@ -30,6 +30,7 @@ const dashboardPaths: Record<TaskOrbitRole, string> = {
   ADMIN: "/admin",
   PROJECT_MANAGER: "/project-manager",
   TEAM_MEMBER: "/team-member",
+  CLIENT: "/client",
 };
 
 const DEMO_ACCOUNTS = [
@@ -47,6 +48,11 @@ const DEMO_ACCOUNTS = [
     label: "Team Member",
     email: "member@taskflow.dev",
     password: "Member@123",
+  },
+  {
+    label: "Client",
+    email: "client@taskflow.dev",
+    password: "Client@123",
   },
 ];
 
@@ -89,9 +95,7 @@ export function LoginForm({
           });
 
           const role = res.data?.role;
-          role
-            ? router.push(dashboardPaths[role])
-            : router.push("/login");
+          role ? router.push(dashboardPaths[role]) : router.push("/login");
         },
         onError: (err: FetchError) => {
           const message = err.data?.message;
@@ -244,7 +248,7 @@ export function LoginForm({
           <div className="relative hidden bg-muted md:block">
             <Image
               fill
-              src="/loginBanner.png"
+              src="/loginBanner.jpg"
               alt="Login banner"
               sizes="(min-width: 768px) 50vw, 0px"
               quality={90}
